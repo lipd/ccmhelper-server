@@ -2,6 +2,11 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const Message = require('./models/Message')
+const bodyParser = require('body-parser')
+
+// load middleware
+// when you use badyParser.json(), the req.body is already json!
+app.use(bodyParser.json())
 
 // this will create ccmhelper db
 const mongoPath = 'mongodb://localhost:27017/ccmhelper'
@@ -39,6 +44,17 @@ app.get('/messages', (req, res) => {
   })
 })
 
+app.post('/message', (req, res) => {
+  const message = new Message(req.body)
+  message.save((err) => {
+    if (err) {
+      console.log(err)
+    }
+    res.json(req.body)
+  })
+})
+
 app.listen(3000, () => {
   console.log('running on port 3000')
 })
+
