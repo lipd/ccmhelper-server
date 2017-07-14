@@ -31,7 +31,12 @@ mongoose.connect(mongoPath)
 // })
 
 app.get('/messages', (req, res) => {
-  res.send('Hello Message')
+  Message.find().sort({'createdAt': -1}).exec((err, messages) => {
+    if (err) {
+      return res.status(500).json({ error: err.message })
+    }
+    res.json({ messages })
+  })
 })
 
 app.listen(3000, () => {
