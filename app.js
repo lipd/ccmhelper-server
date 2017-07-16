@@ -3,9 +3,11 @@ const app = express()
 const mongoose = require('mongoose')
 const Message = require('./models/Message')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 // load middleware
 // when you use badyParser.json(), the req.body is already json!
+app.use(cors())
 app.use(bodyParser.json())
 
 // this will create ccmhelper db
