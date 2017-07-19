@@ -42,7 +42,7 @@ app.get('/messages', (req, res) => {
     if (err) {
       return res.status(500).json({ error: err.message })
     }
-    res.json({ messages })
+    res.json({ data: messages, success: true })
   })
 })
 
@@ -50,9 +50,9 @@ app.post('/message', (req, res) => {
   const message = new Message(req.body)
   message.save((err) => {
     if (err) {
-      console.log(err)
+      return console.log(err)
     }
-    res.json(req.body)
+    res.json({ data: message, success: true })
   })
 })
 
@@ -60,3 +60,4 @@ app.listen(3000, () => {
   console.log('running on port 3000')
 })
 
+module.exports = app
