@@ -48,6 +48,25 @@ app.post('/messages', (req, res) => {
   })
 })
 
+app.get('/questions', (req, res) => {
+  Question.find().sort({'createdAt': -1}).exec((err, questions) => {
+    if (err) {
+      return res.status(500).json({ error: err.message })
+    }
+    res.json({ data: questions, success: true })
+  })
+})
+
+app.post('/questions', (req, res) => {
+  const question = new Question(req.body)
+  question.save((err) => {
+    if (err) {
+      return console.log(err)
+    }
+    res.json({ data: question, success: true })
+  })
+})
+
 app.get('/answers', (req, res) => {
   Answer.find().sort({'createdAt': -1}).exec((err, answers) => {
     if (err) {

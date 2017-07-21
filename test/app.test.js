@@ -36,6 +36,39 @@ describe('test app', () => {
     })
   })
 
+  describe('test POST /question', () => {
+
+    it('should create a answer', (done) => {
+      request(app)
+        .post('/questions')
+        .send({
+          author: "This is test author",
+          avatarUrl: "www.test.url.com",
+          content: "This is test content"
+        })
+        .end((err, res) => {
+          should.not.exist(err)
+          res.body.success.should.true()
+          res.body.data._id.should.be.String()
+          done()
+        })
+    })
+  })
+
+  describe('test GET /question', () => {
+
+    it('should return question', (done) => {
+      request(app)
+        .get('/questions')
+        .end((err, res) => {
+          should.not.exist(err)
+          res.body.success.should.true()
+          res.body.data.length.should.above(0)
+          done()
+        })
+    })
+  })
+
   describe('test POST /answers', () => {
 
     it('should create a answer', (done) => {
