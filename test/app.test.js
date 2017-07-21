@@ -4,10 +4,10 @@ const app = require('../app')
 
 describe('test app', () => {
 
-  describe('test POST /message', () => {
+  describe('test POST /messages', () => {
     it('should create a message', (done) => {
       request(app)
-        .post('/message')
+        .post('/messages')
         .send({
           title: "This is test Title",
           author: "This is test Author",
@@ -35,4 +35,38 @@ describe('test app', () => {
         })
     })
   })
+
+  describe('test POST /answers', () => {
+
+    it('should create a answer', (done) => {
+      request(app)
+        .post('/answers')
+        .send({
+          author: "This is test author",
+          avatarUrl: "www.test.url.com",
+          content: "This is test content"
+        })
+        .end((err, res) => {
+          should.not.exist(err)
+          res.body.success.should.true()
+          res.body.data._id.should.be.String()
+          done()
+        })
+    })
+  })
+
+  describe('test GET /answers', () => {
+
+    it('should return answers', (done) => {
+      request(app)
+        .get('/answers')
+        .end((err, res) => {
+          should.not.exist(err)
+          res.body.success.should.true()
+          res.body.data.length.should.above(0)
+          done()
+        })
+    })
+  })
+
 })
