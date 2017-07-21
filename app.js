@@ -67,6 +67,19 @@ app.post('/questions', (req, res) => {
   })
 })
 
+// get question and answer of it
+app.get('/questions/:id', (req, res) => {
+  Question
+    .findById(req.params.id)
+    .populate('answers')
+    .exec((err, question) => {
+      if (err) {
+        return console.log(err)
+      }
+      res.json({ data: question, success: true })
+    })
+})
+
 app.get('/answers', (req, res) => {
   Answer.find().sort({'createdAt': -1}).exec((err, answers) => {
     if (err) {

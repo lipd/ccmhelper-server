@@ -36,9 +36,9 @@ describe('test app', () => {
     })
   })
 
-  describe('test POST /question', () => {
+  describe('test POST /questions', () => {
 
-    it('should create a answer', (done) => {
+    it('should create a question', (done) => {
       request(app)
         .post('/questions')
         .send({
@@ -55,15 +55,28 @@ describe('test app', () => {
     })
   })
 
-  describe('test GET /question', () => {
+  describe('test GET /questions', () => {
 
-    it('should return question', (done) => {
+    it('should return questions', (done) => {
       request(app)
         .get('/questions')
         .end((err, res) => {
           should.not.exist(err)
           res.body.success.should.true()
           res.body.data.length.should.above(0)
+          done()
+        })
+    })
+  })
+
+  describe('test GET /questions/:id', () => {
+
+    it('should return a question with answers', (done) => {
+      request(app)
+        .get('/questions/5971afa34e3ee35e66f74baa')
+        .end((err, res) => {
+          should.not.exist(err)
+          res.body.success.should.true()
           done()
         })
     })
