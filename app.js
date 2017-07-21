@@ -80,22 +80,36 @@ app.get('/questions/:id', (req, res) => {
     })
 })
 
+app.post('/questions/:qestionId/answers', (req, res) => {
+  const questionId = req.params.questionId
+  Question
+    .findById(questionId)
+    .exec((err, question) => {
+      if (err) {
+        return console.log(err)
+      }
+      const answer = new Answer(req.body)
+      answer.question = question
+      answer.save((err) => {
+        if (err) {
+          return console.log(err)
+        }
+        question.answers.push(answer)
+        question.save((err) => {
+          if (err) {
+            return console.log(err)
+          }
+        })
+      })
+    })
+})
+
 app.get('/answers', (req, res) => {
   Answer.find().sort({'createdAt': -1}).exec((err, answers) => {
     if (err) {
       return res.status(500).json({ error: err.message })
     }
     res.json({ data: answers, success: true })
-  })
-})
-
-app.post('/answers', (req, res) => {
-  const answer = new Answer(req.body)
-  answer.save((err) => {
-    if (err) {
-      return console.log(err)
-    }
-    res.json({ data: answer, success: true })
   })
 })
 
