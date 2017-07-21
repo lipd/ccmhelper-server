@@ -3,7 +3,6 @@ const Schema = mongoose.Schema
 
 const QuestionSchema = new Schema(
   {
-    _id: { type: Number, required: true },
     author: { type: String, required: true },
     avatarUrl: { type: String, required: true },
     content: { type: String },
@@ -13,4 +12,4 @@ const QuestionSchema = new Schema(
   { timestamps:true }
 )
 
-exports.Question = mongoose.model('Question', QuestionSchema)
+module.exports = mongoose.model('Question', QuestionSchema)
