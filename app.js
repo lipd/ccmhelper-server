@@ -26,6 +26,9 @@ mongoose.connect(mongoPath)
 //   console.log('success')
 // })
 
+// TODO: validate the request only have
+// TODO: send a error message to clint
+
 app.get('/messages', (req, res) => {
   Message.find().sort({'createdAt': -1}).exec((err, messages) => {
     if (err) {
@@ -35,13 +38,32 @@ app.get('/messages', (req, res) => {
   })
 })
 
-app.post('/message', (req, res) => {
+app.post('/messages', (req, res) => {
   const message = new Message(req.body)
   message.save((err) => {
     if (err) {
       return console.log(err)
     }
     res.json({ data: message, success: true })
+  })
+})
+
+app.get('/answers', (req, res) => {
+  Answer.find().sort({'createdAt': -1}).exec((err, answers) => {
+    if (err) {
+      return res.status(500).json({ error: err.message })
+    }
+    res.json({ data: answers, success: true })
+  })
+})
+
+app.post('/answers', (req, res) => {
+  const answer = new Answer(req.body)
+  answer.save((err) => {
+    if (err) {
+      return console.log(err)
+    }
+    res.json({ data: answer, success: true })
   })
 })
 
