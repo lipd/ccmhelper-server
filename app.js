@@ -80,7 +80,7 @@ app.get('/questions/:id', (req, res) => {
     })
 })
 
-app.post('/questions/:qestionId/answers', (req, res) => {
+app.post('/questions/:questionId/answers', (req, res) => {
   const questionId = req.params.questionId
   Question
     .findById(questionId)
@@ -99,6 +99,9 @@ app.post('/questions/:qestionId/answers', (req, res) => {
           if (err) {
             return console.log(err)
           }
+          question.populate('answers', (err, data) => {
+            res.json({ data, success: true })
+          })
         })
       })
     })
