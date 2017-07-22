@@ -65,6 +65,7 @@ router.post('/questions/:questionId/answers', (req, res) => {
     })
 })
 
+// get all answers
 router.get('/answers', (req, res) => {
   Answer.find().sort({'createdAt': -1}).exec((err, answers) => {
     if (err) {
@@ -72,6 +73,23 @@ router.get('/answers', (req, res) => {
     }
     res.json({ data: answers, success: true })
   })
+})
+
+router.post('/answers/:answerId/comments', (req, res) => {
+  Answer
+    .findById(req.params.answerId)
+    .exec((err, answer) => {
+      if (err) {
+        console.log(err)
+      }
+      answer.comments.push(req.body)
+      answer.save((err) => {
+        if (err) {
+          return console.log(err)
+        }
+        res.json({ data: answer, success: true })
+      })
+    })
 })
 
 module.exports = router

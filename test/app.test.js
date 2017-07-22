@@ -116,4 +116,22 @@ describe('test app', () => {
     })
   })
 
+  describe('test POST /answers/:answerId/comments', () => {
+
+    it('should return answers', (done) => {
+      request(app)
+        .post('/answers/5972f6b5d393f5005ef291fb/comments')
+        .send({
+          author: "This is test author",
+          avatarUrl: "www.test.url.com",
+          content: "This is test content"
+        })
+        .end((err, res) => {
+          should.not.exist(err)
+          console.log(res.body)
+          done()
+        })
+    })
+  })
+
 })
