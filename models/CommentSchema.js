@@ -5,7 +5,7 @@ const CommentSchema = new Schema(
   {
     author: { type: String, required: true },
     avatarUrl: { type: String, required: true },
-    body: { type: String, required: true }
+    content: { type: String, required: true }
   }
 )
 
