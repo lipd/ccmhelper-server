@@ -1,14 +1,11 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-const Message = require('./models/Message')
-const Question = require('./models/Question')
-const Answer = require('./models/Answer')
-const CommentSchema = require('./models/CommentSchema')
-const Comment = mongoose.model('Comment', CommentSchema)
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
+const notification = require('./router/notification')
+const message = require('./router/message')
 // load middleware
 // when you use badyParser.json(), the req.body is already json!
 app.use(cors())
@@ -26,95 +23,11 @@ mongoose.connect(mongoPath)
 //   console.log('success')
 // })
 
+app.use(message)
+app.use(notification)
+
 // TODO: validate the request only have
 // TODO: send a error message to clint
-
-app.get('/messages', (req, res) => {
-  Message.find().sort({'createdAt': -1}).exec((err, messages) => {
-    if (err) {
-      return res.status(500).json({ error: err.message })
-    }
-    res.json({ data: messages, success: true })
-  })
-})
-
-app.post('/messages', (req, res) => {
-  const message = new Message(req.body)
-  message.save((err) => {
-    if (err) {
-      return console.log(err)
-    }
-    res.json({ data: message, success: true })
-  })
-})
-
-app.get('/questions', (req, res) => {
-  Question.find().sort({'createdAt': -1}).exec((err, questions) => {
-    if (err) {
-      return res.status(500).json({ error: err.message })
-    }
-    res.json({ data: questions, success: true })
-  })
-})
-
-app.post('/questions', (req, res) => {
-  const question = new Question(req.body)
-  question.save((err) => {
-    if (err) {
-      return console.log(err)
-    }
-    res.json({ data: question, success: true })
-  })
-})
-
-// get question and answer of it
-app.get('/questions/:id', (req, res) => {
-  Question
-    .findById(req.params.id)
-    .populate('answers')
-    .exec((err, question) => {
-      if (err) {
-        return console.log(err)
-      }
-      res.json({ data: question, success: true })
-    })
-})
-
-app.post('/questions/:questionId/answers', (req, res) => {
-  const questionId = req.params.questionId
-  Question
-    .findById(questionId)
-    .exec((err, question) => {
-      if (err) {
-        return console.log(err)
-      }
-      const answer = new Answer(req.body)
-      answer.question = question
-      answer.save((err) => {
-        if (err) {
-          return console.log(err)
-        }
-        question.answers.push(answer)
-        question.save((err) => {
-          if (err) {
-            return console.log(err)
-          }
-          question.populate('answers', (err, data) => {
-            res.json({ data, success: true })
-          })
-        })
-      })
-    })
-})
-
-app.get('/answers', (req, res) => {
-  Answer.find().sort({'createdAt': -1}).exec((err, answers) => {
-    if (err) {
-      return res.status(500).json({ error: err.message })
-    }
-    res.json({ data: answers, success: true })
-  })
-})
 
 app.listen(3000, () => {
   console.log('running on port 3000')
