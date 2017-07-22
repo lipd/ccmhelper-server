@@ -128,7 +128,20 @@ describe('test app', () => {
         })
         .end((err, res) => {
           should.not.exist(err)
-          console.log(res.body)
+          done()
+        })
+    })
+  })
+
+  describe('test GET /answers/:answerId', () => {
+
+    it('should return a answer', (done) => {
+      request(app)
+        .get('/answers/5972f6b5d393f5005ef291fb')
+        .end((err, res) => {
+          should.not.exist(err)
+          res.body.success.should.true()
+          res.body.data._id.should.be.String()
           done()
         })
     })

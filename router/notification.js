@@ -75,6 +75,15 @@ router.get('/answers', (req, res) => {
   })
 })
 
+router.get('/answers/:answerId', (req, res) => {
+  Answer.findById(req.params.answerId).exec((err, answer) => {
+    if (err) {
+      return console.log(err)
+    }
+    res.json({ data: answer, success: true })
+  })
+})
+
 router.post('/answers/:answerId/comments', (req, res) => {
   Answer
     .findById(req.params.answerId)
