@@ -82,11 +82,11 @@ describe('test app', () => {
     })
   })
 
-  describe('test POST /answers', () => {
+  describe('test POST /questions/:questionId/answers', () => {
 
     it('should create a answer', (done) => {
       request(app)
-        .post('/answers')
+        .post('/questions/5971afa34e3ee35e66f74baa/answers')
         .send({
           author: "This is test author",
           avatarUrl: "www.test.url.com",
@@ -96,6 +96,7 @@ describe('test app', () => {
           should.not.exist(err)
           res.body.success.should.true()
           res.body.data._id.should.be.String()
+          res.body.data.answers.length.should.above(0)
           done()
         })
     })
