@@ -57,8 +57,8 @@ router.post('/questions/:questionId/answers', (req, res) => {
           if (err) {
             return console.log(err)
           }
-          question.populate('answers', (err, data) => {
-            res.json({ data, success: true })
+          question.populate('answers', (err, populatedQuestion) => {
+            res.json({ data: populatedQuestion, success: true })
           })
         })
       })

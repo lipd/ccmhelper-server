@@ -26,15 +26,16 @@ describe('test API of messages', () => {
   describe('GET /messages', () => {
 
     it('should get all messages', (done) => {
-      mockMessage.save()
-      request(app)
-        .get('/messages')
-        .end((err, res) => {
-          should.not.exist(err)
-          res.body.success.should.true()
-          res.body.data.length.should.above(0)
-          done()
-        })
+      mockMessage.save((err) => {
+        request(app)
+          .get('/messages')
+          .end((err, res) => {
+            should.not.exist(err)
+            res.body.success.should.true()
+            res.body.data.length.should.above(0)
+            done()
+          })
+      })
     })
   })
 

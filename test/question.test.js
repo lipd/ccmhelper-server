@@ -1,117 +1,163 @@
 const request = require('supertest')
 const should = require('should')
 const app = require('../app')
+const mongoose = require('mongoose')
+const Question = require('../models/Question')
+const Answer = require('../models/Answer')
+const CommentSchema = require('../models/CommentSchema')
+const Comment = mongoose.model('Comment', CommentSchema)
 
-describe('test API of questions', () => {
+describe('API of questions', () => {
 
-  describe('test POST /questions', () => {
+  let mockQuestion, mockQuestionData
+  let mockAnswer, mockAnswerData
+  let mockComment, mockCommentData
 
-    it('should create a question', (done) => {
+  before(() => {
+    mockQuestionData = {
+      author: "This is test author",
+      avatarUrl: "www.test.url.com",
+      content: "This is test content"
+    }
+
+    mockAnswerData = {
+      author: "This is test author",
+      avatarUrl: "www.test.url.com",
+      content: "This is test content"
+    }
+
+    mockCommentData = {
+      author: "This is test author",
+      avatarUrl: "www.test.url.com",
+      content: "This is test content"
+    }
+  })
+
+  beforeEach((done) => {
+    mockQuestion = new Question(mockQuestionData)
+    mockAnswer = new Answer(mockAnswerData)
+    mockComment = new Comment(mockCommentData)
+    Question.remove({}, (err) => {
+      Answer.remove({}, (err) => {
+        done()
+      })
+    })
+  })
+
+  describe('GET /questions', () => {
+
+    it('should get all questions', (done) => {
+      mockQuestion.save((err) => {
+        request(app)
+          .get('/questions')
+          .end((err, res) => {
+            should.not.exist(err)
+            res.body.success.should.true()
+            res.body.data.should.be.Array()
+            res.body.data.length.should.above(0)
+            done()
+          })
+      })
+    })
+  })
+
+  describe('POST /questions', () => {
+
+    it('should post a question', (done) => {
       request(app)
         .post('/questions')
-        .send({
-          author: "This is test author",
-          avatarUrl: "www.test.url.com",
-          content: "This is test content"
-        })
+        .send(mockQuestionData)
         .end((err, res) => {
           should.not.exist(err)
           res.body.success.should.true()
+          res.body.data.should.be.Object()
           res.body.data._id.should.be.String()
           done()
         })
     })
   })
 
-  describe('test GET /questions', () => {
+  describe('GET /questions/:id', () => {
 
-    it('should return questions', (done) => {
-      request(app)
-        .get('/questions')
-        .end((err, res) => {
-          should.not.exist(err)
-          res.body.success.should.true()
-          res.body.data.length.should.above(0)
-          done()
-        })
+    it('should get a question with answers', (done) => {
+      mockQuestion.save((err) => {
+        request(app)
+          .get('/questions/' + mockQuestion._id)
+          .end((err, res) => {
+            should.not.exist(err)
+            res.body.success.should.true()
+            res.body.data.answers.should.be.Array()
+            done()
+          })
+      })
     })
   })
 
-  describe('test GET /questions/:id', () => {
+  describe('POST /questions/:questionId/answers', () => {
 
-    it('should return a question with answers', (done) => {
-      request(app)
-        .get('/questions/5971afa34e3ee35e66f74baa')
-        .end((err, res) => {
-          should.not.exist(err)
-          res.body.success.should.true()
-          done()
-        })
+    it('should post an answer', (done) => {
+      mockQuestion.save((err) => {
+        request(app)
+          .post('/questions/'+ mockQuestion._id + '/answers')
+          .send(mockAnswerData)
+          .end((err, res) => {
+            should.not.exist(err)
+            res.body.success.should.true()
+            res.body.data.answers.length.should.above(0)
+            res.body.data.answers[0].should.be.Object()
+            done()
+          })
+      })
     })
   })
 
-  describe('test POST /questions/:questionId/answers', () => {
+  describe('GET /answers', () => {
 
-    it('should create a answer', (done) => {
-      request(app)
-        .post('/questions/5971afa34e3ee35e66f74baa/answers')
-        .send({
-          author: "This is test author",
-          avatarUrl: "www.test.url.com",
-          content: "This is test content"
-        })
-        .end((err, res) => {
-          should.not.exist(err)
-          res.body.success.should.true()
-          res.body.data._id.should.be.String()
-          res.body.data.answers.length.should.above(0)
-          done()
-        })
+    it('should get all answers', (done) => {
+      mockAnswer.save((err) => {
+        request(app)
+          .get('/answers')
+          .end((err, res) => {
+            should.not.exist(err)
+            res.body.success.should.true()
+            res.body.data.should.be.Array()
+            res.body.data.length.should.above(0)
+            done()
+          })
+      })
     })
   })
 
-  describe('test GET /answers', () => {
+  describe('POST /answers/:answerId/comments', () => {
 
-    it('should return answers', (done) => {
-      request(app)
-        .get('/answers')
-        .end((err, res) => {
-          should.not.exist(err)
-          res.body.success.should.true()
-          res.body.data.length.should.above(0)
-          done()
-        })
+    it('should create a comment', (done) => {
+      mockAnswer.save((err) => {
+        request(app)
+          .post('/answers/' + mockAnswer._id + '/comments')
+          .send(mockCommentData)
+          .end((err, res) => {
+            should.not.exist(err)
+            res.body.data.should.be.Object()
+            done()
+          })
+      })
     })
   })
 
-  describe('test POST /answers/:answerId/comments', () => {
+  describe('GET /answers/:answerId', () => {
 
-    it('should return answers', (done) => {
-      request(app)
-        .post('/answers/5972f6b5d393f5005ef291fb/comments')
-        .send({
-          author: "This is test author",
-          avatarUrl: "www.test.url.com",
-          content: "This is test content"
-        })
-        .end((err, res) => {
-          should.not.exist(err)
-          done()
-        })
-    })
-  })
-
-  describe('test GET /answers/:answerId', () => {
-
-    it('should return a answer', (done) => {
-      request(app)
-        .get('/answers/5972f6b5d393f5005ef291fb')
-        .end((err, res) => {
-          should.not.exist(err)
-          res.body.success.should.true()
-          res.body.data._id.should.be.String()
-          done()
-        })
+    it('should get a answer by id', (done) => {
+      mockAnswer.comments.push(mockComment)
+      mockAnswer.save((err) => {
+        request(app)
+          .get('/answers/' + mockAnswer._id)
+          .end((err, res) => {
+            should.not.exist(err)
+            res.body.success.should.true()
+            res.body.data.comments[0].should.be.Object()
+            done()
+          })
+      })
     })
   })
 
