@@ -15,21 +15,21 @@ describe('API of questions', () => {
 
   before(() => {
     mockQuestionData = {
-      author: "This is test author",
-      avatarUrl: "www.test.url.com",
-      content: "This is test content"
+      author: "This is question author",
+      avatarUrl: "test/question/url",
+      content: "This is question content"
     }
 
     mockAnswerData = {
-      author: "This is test author",
-      avatarUrl: "www.test.url.com",
-      content: "This is test content"
+      author: "This is answer author",
+      avatarUrl: "test/answer/url",
+      content: "This is answer content"
     }
 
     mockCommentData = {
-      author: "This is test author",
-      avatarUrl: "www.test.url.com",
-      content: "This is test content"
+      author: "This is comment author",
+      avatarUrl: "test/comment/url",
+      content: "This is comment content"
     }
   })
 
