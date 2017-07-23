@@ -6,10 +6,14 @@ const cors = require('cors')
 
 const question = require('./router/question')
 const message = require('./router/message')
+
 // load middleware
 // when you use badyParser.json(), the req.body is already json!
 app.use(cors())
 app.use(bodyParser.json())
+
+// set mpromise
+mongoose.Promise = global.Promise
 
 // this will create ccmhelper db
 const mongoPath = 'mongodb://localhost:27017/ccmhelper'
