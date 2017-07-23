@@ -13,8 +13,7 @@ app.use(bodyParser.json())
 
 // this will create ccmhelper db
 const mongoPath = 'mongodb://localhost:27017/ccmhelper'
-
-mongoose.connect(mongoPath)
+mongoose.connection.openUri(mongoPath)
 
 // ** Check server connected **
 // const db = mongoose.connection
