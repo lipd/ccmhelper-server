@@ -6,6 +6,7 @@ const cors = require('cors')
 
 const question = require('./router/question')
 const message = require('./router/message')
+const login = require('./router/login')
 
 // load middleware
 // when you use badyParser.json(), the req.body is already json!
@@ -28,6 +29,7 @@ mongoose.connection.openUri(mongoPath)
 
 app.use(message)
 app.use(question)
+app.use(login)
 
 // TODO: validate the request only have
 // TODO: send a error message to clint
