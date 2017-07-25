@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const mongoose =require('mongoose')
-const Question = require('../models/Question')
-const Answer = require('../models/Answer')
-const CommentSchema = require('../models/CommentSchema')
+const Question = require('../models/question')
+const Answer = require('../models/answer')
+const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
 
 router.get('/questions', (req, res) => {
@@ -48,12 +48,12 @@ router.post('/questions/:questionId/answers', (req, res) => {
       }
       const answer = new Answer(req.body)
       answer.question = question
-      answer.save((err) => {
+      answer.save(err => {
         if (err) {
           return console.log(err)
         }
         question.answers.push(answer)
-        question.save((err) => {
+        question.save(err => {
           if (err) {
             return console.log(err)
           }
@@ -92,7 +92,7 @@ router.post('/answers/:answerId/comments', (req, res) => {
         console.log(err)
       }
       answer.comments.push(req.body)
-      answer.save((err) => {
+      answer.save(err => {
         if (err) {
           return console.log(err)
         }

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const CommentSchema = require('./CommentSchema')
+const CommentSchema = require('./comment-schema')
 
 const AnswerSchema = new Schema(
   {

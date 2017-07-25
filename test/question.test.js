@@ -2,9 +2,9 @@ const request = require('supertest')
 const should = require('should')
 const app = require('../app')
 const mongoose = require('mongoose')
-const Question = require('../models/Question')
-const Answer = require('../models/Answer')
-const CommentSchema = require('../models/CommentSchema')
+const Question = require('../models/question')
+const Answer = require('../models/answer')
+const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
 
 describe('API of questions', () => {
@@ -33,7 +33,7 @@ describe('API of questions', () => {
     }
   })
 
-  beforeEach((done) => {
+  beforeEach(done => {
     mockQuestion = new Question(mockQuestionData)
     mockAnswer = new Answer(mockAnswerData)
     mockComment = new Comment(mockCommentData)
@@ -46,7 +46,7 @@ describe('API of questions', () => {
 
   describe('GET /questions', () => {
 
-    it('should get all questions', (done) => {
+    it('should get all questions', done => {
       mockQuestion.save((err) => {
         request(app)
           .get('/questions')
@@ -63,7 +63,7 @@ describe('API of questions', () => {
 
   describe('POST /questions', () => {
 
-    it('should post a question', (done) => {
+    it('should post a question', done => {
       request(app)
         .post('/questions')
         .send(mockQuestionData)
@@ -79,7 +79,7 @@ describe('API of questions', () => {
 
   describe('GET /questions/:id', () => {
 
-    it('should get a question with answers', (done) => {
+    it('should get a question with answers', done => {
       mockQuestion.save((err) => {
         request(app)
           .get('/questions/' + mockQuestion._id)
@@ -95,7 +95,7 @@ describe('API of questions', () => {
 
   describe('POST /questions/:questionId/answers', () => {
 
-    it('should post an answer', (done) => {
+    it('should post an answer', done => {
       mockQuestion.save((err) => {
         request(app)
           .post('/questions/'+ mockQuestion._id + '/answers')
@@ -113,7 +113,7 @@ describe('API of questions', () => {
 
   describe('GET /answers', () => {
 
-    it('should get all answers', (done) => {
+    it('should get all answers', done => {
       mockAnswer.save((err) => {
         request(app)
           .get('/answers')
@@ -130,7 +130,7 @@ describe('API of questions', () => {
 
   describe('POST /answers/:answerId/comments', () => {
 
-    it('should create a comment', (done) => {
+    it('should create a comment', done => {
       mockAnswer.save((err) => {
         request(app)
           .post('/answers/' + mockAnswer._id + '/comments')
@@ -146,7 +146,7 @@ describe('API of questions', () => {
 
   describe('GET /answers/:answerId', () => {
 
-    it('should get a answer by id', (done) => {
+    it('should get a answer by id', done => {
       mockAnswer.comments.push(mockComment)
       mockAnswer.save((err) => {
         request(app)

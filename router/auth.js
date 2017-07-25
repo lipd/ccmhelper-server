@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 const jwt = require('jsonwebtoken')
-const User = require('../models/User')
+const User = require('../models/user')
 const config = require('../config')
 
 const generateToken = function (user) {
@@ -25,7 +25,8 @@ router.post('/login', (req, res) => {
         } else {
           const userData = {
             openId: wxRes.data.openid,
-            avatarUrl: req.body.avatarUrl
+            avatarUrl: req.body.avatarUrl,
+            nickName: req.body.nickName
           }
           const user = new User(userData)
           user.openId = wxRes.data.openid

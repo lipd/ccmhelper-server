@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Message = require('../models/Message')
+const Message = require('../models/message')
 
 router.get('/messages', (req, res) => {
   Message.find().sort({'createdAt': -1}).exec((err, messages) => {
@@ -13,7 +13,7 @@ router.get('/messages', (req, res) => {
 
 router.post('/messages', (req, res) => {
   const message = new Message(req.body)
-  message.save((err) => {
+  message.save(err => {
     if (err) {
       return console.log(err)
     }

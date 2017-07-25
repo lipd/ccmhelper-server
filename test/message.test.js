@@ -1,7 +1,7 @@
 const request = require('supertest')
 const should = require('should')
 const app = require('../app')
-const Message = require('../models/Message')
+const Message = require('../models/message')
 
 
 describe('test API of messages', () => {
@@ -14,19 +14,19 @@ describe('test API of messages', () => {
       author: "Test author",
       content: "Test content"
     }
-    mockMessage = new Message(mockMessageData)
   })
 
-  beforeEach((done) => {
-    Message.remove({}, (err) => {
+  beforeEach(done => {
+    Message.remove({}, err => {
       done()
     })
+    mockMessage = new Message(mockMessageData)
   })
 
   describe('GET /messages', () => {
 
-    it('should get all messages', (done) => {
-      mockMessage.save((err) => {
+    it('should get all messages', done => {
+      mockMessage.save(err => {
         request(app)
           .get('/messages')
           .end((err, res) => {
@@ -41,7 +41,7 @@ describe('test API of messages', () => {
 
   describe('POST /messages', () => {
 
-    it('should create a message', (done) => {
+    it('should create a message', done => {
       request(app)
         .post('/messages')
         .send(mockMessageData)
