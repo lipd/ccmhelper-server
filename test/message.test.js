@@ -11,7 +11,7 @@ describe('test API of messages', () => {
   before(() => {
     mockMessageData = {
       title: "Test title",
-      author: "Test author",
+      department: "Test deparment",
       content: "Test content"
     }
   })
@@ -46,10 +46,10 @@ describe('test API of messages', () => {
         .post('/messages')
         .send(mockMessageData)
         .end((err, res) => {
-          should.not.exist(err)
-          res.body.success.should.true()
-          res.body.data._id.should.be.String()
-          done()
+            should.not.exist(err)
+            res.body.success.should.true()
+            res.body.data.length.should.above(0)
+            done()
         })
     })
   })
