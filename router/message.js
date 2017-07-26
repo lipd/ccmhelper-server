@@ -17,7 +17,12 @@ router.post('/messages', (req, res) => {
     if (err) {
       return console.log(err)
     }
-    res.json({ data: message, success: true })
+    Message.find().sort({'createdAt': -1}).exec((err, messages) => {
+      if (err) {
+        return res.status(500).json({ error: err.message })
+      }
+      res.json({ data: messages, success: true })
+    })
   })
 })
 
