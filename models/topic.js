@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const QuestionSchema = new Schema(
+const TopicSchema = new Schema(
   {
     author: { type: String, required: true },
     avatarUrl: { type: String, required: true },
@@ -12,4 +12,4 @@ const QuestionSchema = new Schema(
   { timestamps:true }
 )
 
-module.exports = mongoose.model('Question', QuestionSchema)
+module.exports = mongoose.model('Topic', TopicSchema)

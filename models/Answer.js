@@ -8,7 +8,7 @@ const AnswerSchema = new Schema(
     avatarUrl: { type: String, require: true },
     content: { type: String, require: true },
     vote: { type: Number, default: 0 },
-    question: { type: Schema.Types.ObjectId, ref: 'Question' },
+    topic: { type: Schema.Types.ObjectId, ref: 'Topic' },
     comments: [ CommentSchema ]
   },
   { timestamps: true }

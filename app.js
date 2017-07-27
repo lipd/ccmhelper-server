@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
-const question = require('./router/question')
+const topic = require('./router/topic')
 const message = require('./router/message')
 const auth = require('./router/auth')
 
@@ -28,7 +28,7 @@ mongoose.connection.openUri(mongoPath)
 // })
 
 app.use(message)
-app.use(question)
+app.use(topic)
 app.use(auth)
 
 // TODO: validate the request only have

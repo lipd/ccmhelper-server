@@ -11,7 +11,7 @@
 }
 ```
 
-## Question
+## Topic
 
 ```js
 {
@@ -34,7 +34,7 @@
   vote: Number,
   time: Date,
   comments: [ Comment ],
-  question: _Question,
+  topic: _Topic,
 }
 ```
 

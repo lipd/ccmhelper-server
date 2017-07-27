@@ -2,22 +2,22 @@ const request = require('supertest')
 const should = require('should')
 const app = require('../app')
 const mongoose = require('mongoose')
-const Question = require('../models/question')
+const Topic = require('../models/topic')
 const Answer = require('../models/answer')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
 
-describe('API of questions', () => {
+describe('API of topics', () => {
 
-  let mockQuestion, mockQuestionData
+  let mockTopic, mockTopicData
   let mockAnswer, mockAnswerData
   let mockComment, mockCommentData
 
   before(() => {
-    mockQuestionData = {
-      author: "This is question author",
-      avatarUrl: "test/question/url",
-      content: "This is question content"
+    mockTopicData = {
+      author: "This is topic author",
+      avatarUrl: "test/topic/url",
+      content: "This is topic content"
     }
 
     mockAnswerData = {
@@ -34,22 +34,22 @@ describe('API of questions', () => {
   })
 
   beforeEach(done => {
-    mockQuestion = new Question(mockQuestionData)
+    mockTopic = new Topic(mockTopicData)
     mockAnswer = new Answer(mockAnswerData)
     mockComment = new Comment(mockCommentData)
-    Question.remove({}, (err) => {
+    Topic.remove({}, (err) => {
       Answer.remove({}, (err) => {
         done()
       })
     })
   })
 
-  describe('GET /questions', () => {
+  describe('GET /topics', () => {
 
-    it('should get all questions', done => {
-      mockQuestion.save((err) => {
+    it('should get all topics', done => {
+      mockTopic.save((err) => {
         request(app)
-          .get('/questions')
+          .get('/topics')
           .end((err, res) => {
             should.not.exist(err)
             res.body.success.should.true()
@@ -61,12 +61,12 @@ describe('API of questions', () => {
     })
   })
 
-  describe('POST /questions', () => {
+  describe('POST /topics', () => {
 
-    it('should post a question', done => {
+    it('should post a topic', done => {
       request(app)
-        .post('/questions')
-        .send(mockQuestionData)
+        .post('/topics')
+        .send(mockTopicData)
         .end((err, res) => {
           should.not.exist(err)
           res.body.success.should.true()
@@ -77,12 +77,12 @@ describe('API of questions', () => {
     })
   })
 
-  describe('GET /questions/:id', () => {
+  describe('GET /topics/:id', () => {
 
-    it('should get a question with answers', done => {
-      mockQuestion.save((err) => {
+    it('should get a topic with answers', done => {
+      mockTopic.save((err) => {
         request(app)
-          .get('/questions/' + mockQuestion._id)
+          .get('/topics/' + mockTopic._id)
           .end((err, res) => {
             should.not.exist(err)
             res.body.success.should.true()
@@ -93,12 +93,12 @@ describe('API of questions', () => {
     })
   })
 
-  describe('POST /questions/:questionId/answers', () => {
+  describe('POST /topics/:topicId/answers', () => {
 
     it('should post an answer', done => {
-      mockQuestion.save((err) => {
+      mockTopic.save((err) => {
         request(app)
-          .post('/questions/'+ mockQuestion._id + '/answers')
+          .post('/topics/'+ mockTopic._id + '/answers')
           .send(mockAnswerData)
           .end((err, res) => {
             should.not.exist(err)

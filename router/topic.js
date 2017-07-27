@@ -1,64 +1,64 @@
 const express = require('express')
 const router = express.Router()
 const mongoose =require('mongoose')
-const Question = require('../models/question')
+const Topic = require('../models/topic')
 const Answer = require('../models/answer')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
 
-router.get('/questions', (req, res) => {
-  Question.find().sort({'createdAt': -1}).exec((err, questions) => {
+router.get('/topics', (req, res) => {
+  Topic.find().sort({'createdAt': -1}).exec((err, topics) => {
     if (err) {
       return res.status(500).json({ error: err.message })
     }
-    res.json({ data: questions, success: true })
+    res.json({ data: topics, success: true })
   })
 })
 
-router.post('/questions', (req, res) => {
-  const question = new Question(req.body)
-  question.save((err) => {
+router.post('/topics', (req, res) => {
+  const topic = new Topic(req.body)
+  topic.save((err) => {
     if (err) {
       return console.log(err)
     }
-    res.json({ data: question, success: true })
+    res.json({ data: topic, success: true })
   })
 })
 
-// get question and answer of it
-router.get('/questions/:id', (req, res) => {
-  Question
+// get topic and answer of it
+router.get('/topics/:id', (req, res) => {
+  Topic
     .findById(req.params.id)
     .populate('answers')
-    .exec((err, question) => {
+    .exec((err, topic) => {
       if (err) {
         return console.log(err)
       }
-      res.json({ data: question, success: true })
+      res.json({ data: topic, success: true })
     })
 })
 
-router.post('/questions/:questionId/answers', (req, res) => {
-  const questionId = req.params.questionId
-  Question
-    .findById(questionId)
-    .exec((err, question) => {
+router.post('/topics/:topicId/answers', (req, res) => {
+  const topicId = req.params.topicId
+  Topic
+    .findById(topicId)
+    .exec((err, topic) => {
       if (err) {
         return console.log(err)
       }
       const answer = new Answer(req.body)
-      answer.question = question
+      answer.topic = topic
       answer.save(err => {
         if (err) {
           return console.log(err)
         }
-        question.answers.push(answer)
-        question.save(err => {
+        topic.answers.push(answer)
+        topic.save(err => {
           if (err) {
             return console.log(err)
           }
-          question.populate('answers', (err, populatedQuestion) => {
-            res.json({ data: populatedQuestion, success: true })
+          topic.populate('answers', (err, populatedTopic) => {
+            res.json({ data: populatedTopic, success: true })
           })
         })
       })

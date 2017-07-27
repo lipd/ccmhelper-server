@@ -11,7 +11,7 @@ const UserSchema = new Schema(
     department: { type: String },
 
     answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }],
-    attentionQuestions: [{ type: Schema.Types.ObjectId, ref: 'Question' }]
+    attentionTopics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }]
   },
   { timestamps: true }
 )
