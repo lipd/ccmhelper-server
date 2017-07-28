@@ -5,6 +5,8 @@ const Topic = require('../models/topic')
 const Answer = require('../models/answer')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
+const requireAuth = require('../middleware/require-auth')
+const getUser = require('../middleware/get-user')
 
 router.get('/topics', (req, res) => {
   Topic.find().sort({'createdAt': -1}).exec((err, topics) => {
@@ -15,8 +17,10 @@ router.get('/topics', (req, res) => {
   })
 })
 
-router.post('/topics', (req, res) => {
+router.post('/topics', [requireAuth, getUser], (req, res) => {
+  const user = req.user
   const topic = new Topic(req.body)
+  topic.author = user
   topic.save((err) => {
     if (err) {
       return console.log(err)
@@ -25,7 +29,7 @@ router.post('/topics', (req, res) => {
   })
 })
 
-// get topic and answer of it
+// get topic and the answers of it
 router.get('/topics/:id', (req, res) => {
   Topic
     .findById(req.params.id)
