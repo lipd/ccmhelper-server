@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const UserSchema = new Schema(
   {
-    openId: { type: String, required: true },
+    openid: { type: String, required: true },
     avatarUrl: { type: String, required: true },
     isAdmin: { type: Boolean, default: false },
 

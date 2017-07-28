@@ -16,23 +16,23 @@ router.post('/login', (req, res) => {
   const wxAPI = `https://api.weixin.qq.com/sns/jscode2session?${queryString}`
   axios.get(wxAPI)
     .then(wxRes => {
-      User.findOne({openId: wxRes.data.openid}, (err, user) => {
+      User.findOne({openid: wxRes.data.openid}, (err, user) => {
         if (user) {
           // TODO: check user's avatar everytime
           return res.json({
-            token: generateToken({openId: wxRes.data.openid})
+            token: generateToken({openid: wxRes.data.openid})
           })
         } else {
           const userData = {
-            openId: wxRes.data.openid,
+            openid: wxRes.data.openid,
             avatarUrl: req.body.avatarUrl,
             nickName: req.body.nickName
           }
           const user = new User(userData)
-          user.openId = wxRes.data.openid
+          user.openid = wxRes.data.openid
           user.save()
           return res.json({
-            token: generateToken({openId: wxRes.data.openid}),
+            token: generateToken({openid: wxRes.data.openid}),
           })
         }
       })
