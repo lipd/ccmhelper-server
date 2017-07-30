@@ -1,3 +1,5 @@
+// TODO: add user test
+// TODO: add POST /topoics test
 const request = require('supertest')
 const should = require('should')
 const app = require('../app')
@@ -6,18 +8,18 @@ const Topic = require('../models/topic')
 const Reply = require('../models/reply')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
+const User = require('../models/user')
 
 describe('API of topics', () => {
 
   let mockTopic, mockTopicData
   let mockReply, mockReplyData
   let mockComment, mockCommentData
+  let mockUser, mockUserData
 
   before(() => {
     mockTopicData = {
-      author: "This is topic author",
-      avatarUrl: "test/topic/url",
-      content: "This is topic content"
+      title: 'Test title'
     }
 
     mockReplyData = {
@@ -31,15 +33,24 @@ describe('API of topics', () => {
       avatarUrl: "test/comment/url",
       content: "This is comment content"
     }
+
+    mockUserData = {
+      openid: '123456',
+      avatarUrl: 'test/avatar/url',
+      nickName: 'zs'
+    }
   })
 
   beforeEach(done => {
     mockTopic = new Topic(mockTopicData)
     mockReply = new Reply(mockReplyData)
     mockComment = new Comment(mockCommentData)
+    mockUser = new User(mockUserData)
     Topic.remove({}, (err) => {
       Reply.remove({}, (err) => {
-        done()
+        User.remove({}, (err) => {
+          done()
+        })
       })
     })
   })
@@ -47,16 +58,19 @@ describe('API of topics', () => {
   describe('GET /topics', () => {
 
     it('should get all topics', done => {
-      mockTopic.save((err) => {
-        request(app)
-          .get('/topics')
-          .end((err, res) => {
-            should.not.exist(err)
-            res.body.success.should.true()
-            res.body.data.should.be.Array()
-            res.body.data.length.should.above(0)
-            done()
-          })
+      mockUser.save((err) => {
+        mockTopic.author = mockUser
+        mockTopic.save((err) => {
+          request(app)
+            .get('/topics')
+            .end((err, res) => {
+              should.not.exist(err)
+              res.body.success.should.true()
+              res.body.data.should.be.Array()
+              res.body.data.length.should.above(0)
+              done()
+            })
+        })
       })
     })
   })
@@ -80,15 +94,18 @@ describe('API of topics', () => {
   describe('GET /topics/:id', () => {
 
     it('should get a topic with replys', done => {
-      mockTopic.save((err) => {
-        request(app)
-          .get('/topics/' + mockTopic._id)
-          .end((err, res) => {
-            should.not.exist(err)
-            res.body.success.should.true()
-            res.body.data.replys.should.be.Array()
-            done()
-          })
+      mockUser.save((err) => {
+        mockTopic.author = mockUser
+        mockTopic.save((err) => {
+          request(app)
+            .get('/topics/' + mockTopic._id)
+            .end((err, res) => {
+              should.not.exist(err)
+              res.body.success.should.true()
+              res.body.data.replys.should.be.Array()
+              done()
+            })
+        })
       })
     })
   })

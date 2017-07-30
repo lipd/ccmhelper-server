@@ -10,7 +10,7 @@ const UserSchema = new Schema(
     nickName: { type: String, required: true },
     department: { type: String },
 
-    replys: [{ type: Schema.Types.ObjectId, ref: 'Answer' }],
+    replys: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
     attentionTopics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }]
   },
   { timestamps: true }

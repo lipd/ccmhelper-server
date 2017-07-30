@@ -20,11 +20,11 @@
   content: String,
   attentionCount: Number,
   time: Date,
-  replys: [ _Answer ]
+  replys: [ _Reply ]
 }
 ```
 
-## Answer
+## Reply
 
 ```js
 {
