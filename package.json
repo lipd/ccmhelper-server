@@ -19,6 +19,7 @@
     "cors": "^2.8.4",
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
+    "moment": "^2.18.1",
     "mongoose": "^4.11.2"
   },
   "devDependencies": {

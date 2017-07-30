@@ -3,6 +3,7 @@ const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const moment = require('moment')
 
 const topic = require('./router/topic')
 const message = require('./router/message')
@@ -15,6 +16,8 @@ app.use(bodyParser.json())
 
 // set mpromise
 mongoose.Promise = global.Promise
+// set moment
+moment.locale('zh-cn')
 
 // this will create ccmhelper db
 const mongoPath = 'mongodb://localhost:27017/ccmhelper'

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const mongoose =require('mongoose')
+const moment = require('moment')
 const Topic = require('../models/topic')
 const Answer = require('../models/answer')
 const CommentSchema = require('../models/comment-schema')
@@ -9,12 +10,26 @@ const requireAuth = require('../middleware/require-auth')
 const getUser = require('../middleware/get-user')
 
 router.get('/topics', (req, res) => {
-  Topic.find().sort({'createdAt': -1}).exec((err, topics) => {
-    if (err) {
-      return res.status(500).json({ error: err.message })
-    }
-    res.json({ data: topics, success: true })
-  })
+  Topic
+    .find()
+    .populate('author', 'avatarUrl nickName')
+    .sort({'createdAt': -1})
+    .exec((err, topics) => {
+      if (err) {
+        return res.status(500).json({ error: err.message })
+      }
+      const topicsData = topics.map(topic => ({
+        _id: topic._id,
+        time: moment(topic.createdAt).fromNow(),
+        author: topic.author.nickName,
+        avatarUrl: topic.author.avatarUrl,
+        content: topic.content,
+        title: topic.title,
+        attentionCount: topic.attentionCount,
+        replyCount: topic.answers.length
+      }))
+      res.json({ data: topicsData, success: true })
+    })
 })
 
 router.post('/topics', [requireAuth, getUser], (req, res) => {
