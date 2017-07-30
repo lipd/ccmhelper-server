@@ -7,7 +7,7 @@ const TopicSchema = new Schema(
     title: { type: String, required: true },
     content: { type: String },
     attentionCount: { type: Number, default: 0 },
-    answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }]
+    replys: [{ type: Schema.Types.ObjectId, ref: 'Answer' }]
   },
   { timestamps:true }
 )

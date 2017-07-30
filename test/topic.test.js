@@ -3,14 +3,14 @@ const should = require('should')
 const app = require('../app')
 const mongoose = require('mongoose')
 const Topic = require('../models/topic')
-const Answer = require('../models/answer')
+const Reply = require('../models/reply')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
 
 describe('API of topics', () => {
 
   let mockTopic, mockTopicData
-  let mockAnswer, mockAnswerData
+  let mockReply, mockReplyData
   let mockComment, mockCommentData
 
   before(() => {
@@ -20,10 +20,10 @@ describe('API of topics', () => {
       content: "This is topic content"
     }
 
-    mockAnswerData = {
-      author: "This is answer author",
-      avatarUrl: "test/answer/url",
-      content: "This is answer content"
+    mockReplyData = {
+      author: "This is reply author",
+      avatarUrl: "test/reply/url",
+      content: "This is reply content"
     }
 
     mockCommentData = {
@@ -35,10 +35,10 @@ describe('API of topics', () => {
 
   beforeEach(done => {
     mockTopic = new Topic(mockTopicData)
-    mockAnswer = new Answer(mockAnswerData)
+    mockReply = new Reply(mockReplyData)
     mockComment = new Comment(mockCommentData)
     Topic.remove({}, (err) => {
-      Answer.remove({}, (err) => {
+      Reply.remove({}, (err) => {
         done()
       })
     })
@@ -79,44 +79,44 @@ describe('API of topics', () => {
 
   describe('GET /topics/:id', () => {
 
-    it('should get a topic with answers', done => {
+    it('should get a topic with replys', done => {
       mockTopic.save((err) => {
         request(app)
           .get('/topics/' + mockTopic._id)
           .end((err, res) => {
             should.not.exist(err)
             res.body.success.should.true()
-            res.body.data.answers.should.be.Array()
+            res.body.data.replys.should.be.Array()
             done()
           })
       })
     })
   })
 
-  describe('POST /topics/:topicId/answers', () => {
+  describe('POST /topics/:topicId/replys', () => {
 
-    it('should post an answer', done => {
+    it('should post an reply', done => {
       mockTopic.save((err) => {
         request(app)
-          .post('/topics/'+ mockTopic._id + '/answers')
-          .send(mockAnswerData)
+          .post('/topics/'+ mockTopic._id + '/replys')
+          .send(mockReplyData)
           .end((err, res) => {
             should.not.exist(err)
             res.body.success.should.true()
-            res.body.data.answers.length.should.above(0)
-            res.body.data.answers[0].should.be.Object()
+            res.body.data.replys.length.should.above(0)
+            res.body.data.replys[0].should.be.Object()
             done()
           })
       })
     })
   })
 
-  describe('GET /answers', () => {
+  describe('GET /replys', () => {
 
-    it('should get all answers', done => {
-      mockAnswer.save((err) => {
+    it('should get all replys', done => {
+      mockReply.save((err) => {
         request(app)
-          .get('/answers')
+          .get('/replys')
           .end((err, res) => {
             should.not.exist(err)
             res.body.success.should.true()
@@ -128,12 +128,12 @@ describe('API of topics', () => {
     })
   })
 
-  describe('POST /answers/:answerId/comments', () => {
+  describe('POST /replys/:replyId/comments', () => {
 
     it('should create a comment', done => {
-      mockAnswer.save((err) => {
+      mockReply.save((err) => {
         request(app)
-          .post('/answers/' + mockAnswer._id + '/comments')
+          .post('/replys/' + mockReply._id + '/comments')
           .send(mockCommentData)
           .end((err, res) => {
             should.not.exist(err)
@@ -144,13 +144,13 @@ describe('API of topics', () => {
     })
   })
 
-  describe('GET /answers/:answerId', () => {
+  describe('GET /replys/:replyId', () => {
 
-    it('should get a answer by id', done => {
-      mockAnswer.comments.push(mockComment)
-      mockAnswer.save((err) => {
+    it('should get a reply by id', done => {
+      mockReply.comments.push(mockComment)
+      mockReply.save((err) => {
         request(app)
-          .get('/answers/' + mockAnswer._id)
+          .get('/replys/' + mockReply._id)
           .end((err, res) => {
             should.not.exist(err)
             res.body.success.should.true()

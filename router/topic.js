@@ -3,7 +3,7 @@ const router = express.Router()
 const mongoose =require('mongoose')
 const moment = require('moment')
 const Topic = require('../models/topic')
-const Answer = require('../models/answer')
+const Reply = require('../models/reply')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
 const requireAuth = require('../middleware/require-auth')
@@ -26,7 +26,7 @@ router.get('/topics', (req, res) => {
         content: topic.content,
         title: topic.title,
         attentionCount: topic.attentionCount,
-        replyCount: topic.answers.length
+        replyCount: topic.replys.length
       }))
       res.json({ data: topicsData, success: true })
     })
@@ -44,11 +44,11 @@ router.post('/topics', [requireAuth, getUser], (req, res) => {
   })
 })
 
-// get topic and the answers of it
+// get topic and the replys of it
 router.get('/topics/:id', (req, res) => {
   Topic
     .findById(req.params.id)
-    .populate('answers')
+    .populate('replys')
     .exec((err, topic) => {
       if (err) {
         return console.log(err)
@@ -57,7 +57,7 @@ router.get('/topics/:id', (req, res) => {
     })
 })
 
-router.post('/topics/:topicId/answers', (req, res) => {
+router.post('/topics/:topicId/replys', (req, res) => {
   const topicId = req.params.topicId
   Topic
     .findById(topicId)
@@ -65,18 +65,18 @@ router.post('/topics/:topicId/answers', (req, res) => {
       if (err) {
         return console.log(err)
       }
-      const answer = new Answer(req.body)
-      answer.topic = topic
-      answer.save(err => {
+      const reply = new Reply(req.body)
+      reply.topic = topic
+      reply.save(err => {
         if (err) {
           return console.log(err)
         }
-        topic.answers.push(answer)
+        topic.replys.push(reply)
         topic.save(err => {
           if (err) {
             return console.log(err)
           }
-          topic.populate('answers', (err, populatedTopic) => {
+          topic.populate('replys', (err, populatedTopic) => {
             res.json({ data: populatedTopic, success: true })
           })
         })
@@ -84,38 +84,38 @@ router.post('/topics/:topicId/answers', (req, res) => {
     })
 })
 
-// get all answers
-router.get('/answers', (req, res) => {
-  Answer.find().sort({'createdAt': -1}).exec((err, answers) => {
+// get all replys
+router.get('/replys', (req, res) => {
+  Reply.find().sort({'createdAt': -1}).exec((err, replys) => {
     if (err) {
       return res.status(500).json({ error: err.message })
     }
-    res.json({ data: answers, success: true })
+    res.json({ data: replys, success: true })
   })
 })
 
-router.get('/answers/:answerId', (req, res) => {
-  Answer.findById(req.params.answerId).exec((err, answer) => {
+router.get('/replys/:replyId', (req, res) => {
+  Reply.findById(req.params.replyId).exec((err, reply) => {
     if (err) {
       return console.log(err)
     }
-    res.json({ data: answer, success: true })
+    res.json({ data: reply, success: true })
   })
 })
 
-router.post('/answers/:answerId/comments', (req, res) => {
-  Answer
-    .findById(req.params.answerId)
-    .exec((err, answer) => {
+router.post('/replys/:replyId/comments', (req, res) => {
+  Reply
+    .findById(req.params.replyId)
+    .exec((err, reply) => {
       if (err) {
         console.log(err)
       }
-      answer.comments.push(req.body)
-      answer.save(err => {
+      reply.comments.push(req.body)
+      reply.save(err => {
         if (err) {
           return console.log(err)
         }
-        res.json({ data: answer, success: true })
+        res.json({ data: reply, success: true })
       })
     })
 })

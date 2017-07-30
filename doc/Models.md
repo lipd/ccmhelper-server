@@ -20,7 +20,7 @@
   content: String,
   attentionCount: Number,
   time: Date,
-  answers: [ _Answer ]
+  replys: [ _Answer ]
 }
 ```
 
