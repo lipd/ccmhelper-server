@@ -4,8 +4,7 @@ const CommentSchema = require('./comment-schema')
 
 const ReplySchema = new Schema(
   {
-    author: { type: String, required: true},
-    avatarUrl: { type: String, require: true },
+    author: { type: Schema.Types.ObjectId, ref: 'User'},
     content: { type: String, require: true },
     vote: { type: Number, default: 0 },
     topic: { type: Schema.Types.ObjectId, ref: 'Topic' },

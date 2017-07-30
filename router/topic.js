@@ -48,7 +48,10 @@ router.post('/topics', [requireAuth, getUser], (req, res) => {
 router.get('/topics/:id', (req, res) => {
   Topic
     .findById(req.params.id)
-    .populate('replys')
+    .populate({
+      path: 'replys',
+      populate: { path: 'author' }
+    })
     .exec((err, topic) => {
       if (err) {
         return console.log(err)
@@ -57,8 +60,10 @@ router.get('/topics/:id', (req, res) => {
     })
 })
 
-router.post('/topics/:topicId/replys', (req, res) => {
+router.post('/topics/:topicId/replys', [requireAuth, getUser], (req, res) => {
+  const user = req.user
   const topicId = req.params.topicId
+  console.log(topicId)
   Topic
     .findById(topicId)
     .exec((err, topic) => {
@@ -67,6 +72,7 @@ router.post('/topics/:topicId/replys', (req, res) => {
       }
       const reply = new Reply(req.body)
       reply.topic = topic
+      reply.author = user
       reply.save(err => {
         if (err) {
           return console.log(err)
