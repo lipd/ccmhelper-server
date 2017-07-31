@@ -6,6 +6,7 @@ const cors = require('cors')
 const moment = require('moment')
 
 const topic = require('./router/topic')
+const reply = require('./router/reply')
 const message = require('./router/message')
 const auth = require('./router/auth')
 
@@ -32,6 +33,7 @@ mongoose.connection.openUri(mongoPath)
 
 app.use(message)
 app.use(topic)
+app.use(reply)
 app.use(auth)
 
 // TODO: validate the request only have
