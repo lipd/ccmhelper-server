@@ -10,14 +10,14 @@ describe('test API of messages', () => {
 
   before(() => {
     mockMessageData = {
-      title: "Test title",
-      department: "Test deparment",
-      content: "Test content"
+      title: 'Test title',
+      department: 'Test deparment',
+      content: 'Test content'
     }
   })
 
   beforeEach(done => {
-    Message.remove({}, err => {
+    Message.remove({}, () => {
       done()
     })
     mockMessage = new Message(mockMessageData)
@@ -26,7 +26,7 @@ describe('test API of messages', () => {
   describe('GET /messages', () => {
 
     it('should get all messages', done => {
-      mockMessage.save(err => {
+      mockMessage.save(() => {
         request(app)
           .get('/messages')
           .end((err, res) => {
@@ -46,10 +46,10 @@ describe('test API of messages', () => {
         .post('/messages')
         .send(mockMessageData)
         .end((err, res) => {
-            should.not.exist(err)
-            res.body.success.should.true()
-            res.body.data.length.should.above(0)
-            done()
+          should.not.exist(err)
+          res.body.success.should.true()
+          res.body.data.length.should.above(0)
+          done()
         })
     })
   })

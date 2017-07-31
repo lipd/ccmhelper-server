@@ -1,21 +1,14 @@
 const request = require('supertest')
 const should = require('should')
 const app = require('../app')
-const mongoose = require('mongoose')
-const CommentSchema = require('../models/comment-schema')
-const Comment = mongoose.model('Comment', CommentSchema)
-const Topic = require('../models/topic')
-const Reply = require('../models/reply')
-const User = require('../models/user')
 const support = require('./support')
 
 describe('API of replys', () => {
 
-  let mockUser, mockTopic, mockReply, mockComment
+  let mockTopic, mockReply, mockComment
 
   before(done => {
     support.createUser((err, user) => {
-      mockUser = user
       support.createTopic(user, (err, topic) => {
         mockTopic = topic
         support.createReply(user, topic, (err, reply) => {
@@ -32,7 +25,7 @@ describe('API of replys', () => {
   describe('POST /topics/:topicId/replys', () => {
 
     it('should post an reply', done => {
-      mockTopic.save((err) => {
+      mockTopic.save(() => {
         request(app)
           .post('/topics/'+ mockTopic._id + '/replys')
           .set('Authorization', support.accessToken)
@@ -51,7 +44,7 @@ describe('API of replys', () => {
   describe('GET /replys', () => {
 
     it('should get all replys', done => {
-      mockReply.save((err) => {
+      mockReply.save(() => {
         request(app)
           .get('/replys')
           .end((err, res) => {
@@ -69,7 +62,7 @@ describe('API of replys', () => {
 
     it('should get a reply by id', done => {
       mockReply.comments.push(mockComment)
-      mockReply.save((err) => {
+      mockReply.save(() => {
         request(app)
           .get('/replys/' + mockReply._id)
           .end((err, res) => {
@@ -85,7 +78,7 @@ describe('API of replys', () => {
   describe('POST /replys/:replyId/comments', () => {
 
     it('should create a comment', done => {
-      mockReply.save((err) => {
+      mockReply.save(() => {
         request(app)
           .post('/replys/' + mockReply._id + '/comments')
           .set('Authorization', support.accessToken)

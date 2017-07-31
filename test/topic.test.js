@@ -1,9 +1,6 @@
 const request = require('supertest')
 const should = require('should')
 const app = require('../app')
-const Topic = require('../models/topic')
-const Reply = require('../models/reply')
-const User = require('../models/user')
 const support = require('./support')
 
 describe('API of topics', () => {
@@ -23,9 +20,9 @@ describe('API of topics', () => {
   describe('GET /topics', () => {
 
     it('should get all topics', done => {
-      mockUser.save((err) => {
+      mockUser.save(() => {
         mockTopic.author = mockUser
-        mockTopic.save((err) => {
+        mockTopic.save(() => {
           request(app)
             .get('/topics')
             .end((err, res) => {
@@ -63,9 +60,9 @@ describe('API of topics', () => {
   describe('GET /topics/:id', () => {
 
     it('should get a topic with replys', done => {
-      mockUser.save((err) => {
+      mockUser.save(() => {
         mockTopic.author = mockUser
-        mockTopic.save((err) => {
+        mockTopic.save(() => {
           request(app)
             .get('/topics/' + mockTopic._id)
             .end((err, res) => {
