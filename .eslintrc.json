@@ -20,6 +20,8 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-console": "warn",
+        "no-undef": "warn"
     }
 }
