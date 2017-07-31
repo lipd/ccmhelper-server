@@ -6,10 +6,9 @@ const requireAuth = require('../middleware/require-auth')
 const getUser = require('../middleware/get-user')
 
 router.get('/topics', (req, res) => {
-  Topic
-    .find()
+  Topic.find()
     .populate('author', 'avatarUrl nickName')
-    .sort({'createdAt': -1})
+    .sort({ createdAt: -1 })
     .exec((err, topics) => {
       if (err) {
         return res.status(500).json({ error: err.message })
@@ -32,7 +31,7 @@ router.post('/topics', [requireAuth, getUser], (req, res) => {
   const user = req.user
   const topic = new Topic(req.body)
   topic.author = user
-  topic.save((err) => {
+  topic.save(err => {
     if (err) {
       return console.log(err)
     }
@@ -42,8 +41,7 @@ router.post('/topics', [requireAuth, getUser], (req, res) => {
 
 // get topic and the replys of it
 router.get('/topics/:id', (req, res) => {
-  Topic
-    .findById(req.params.id)
+  Topic.findById(req.params.id)
     .populate({
       path: 'replys',
       populate: { path: 'author' }

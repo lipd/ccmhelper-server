@@ -3,7 +3,7 @@ const router = express.Router()
 const Message = require('../models/message')
 
 router.get('/messages', (req, res) => {
-  Message.find().sort({'createdAt': -1}).exec((err, messages) => {
+  Message.find().sort({ createdAt: -1 }).exec((err, messages) => {
     if (err) {
       return res.status(500).json({ error: err.message })
     }
@@ -17,7 +17,7 @@ router.post('/messages', (req, res) => {
     if (err) {
       return console.log(err)
     }
-    Message.find().sort({'createdAt': -1}).exec((err, messages) => {
+    Message.find().sort({ createdAt: -1 }).exec((err, messages) => {
       if (err) {
         return res.status(500).json({ error: err.message })
       }

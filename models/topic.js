@@ -9,7 +9,7 @@ const TopicSchema = new Schema(
     attentionCount: { type: Number, default: 0 },
     replys: [{ type: Schema.Types.ObjectId, ref: 'Reply' }]
   },
-  { timestamps:true }
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('Topic', TopicSchema)
