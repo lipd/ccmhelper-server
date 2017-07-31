@@ -1,56 +1,21 @@
-// TODO: add user test
-// TODO: add POST /topoics test
 const request = require('supertest')
 const should = require('should')
 const app = require('../app')
-const mongoose = require('mongoose')
 const Topic = require('../models/topic')
 const Reply = require('../models/reply')
-const CommentSchema = require('../models/comment-schema')
-const Comment = mongoose.model('Comment', CommentSchema)
 const User = require('../models/user')
+const support = require('./support')
 
 describe('API of topics', () => {
 
-  let mockTopic, mockTopicData
-  let mockReply, mockReplyData
-  let mockComment, mockCommentData
-  let mockUser, mockUserData
+  let mockUser, mockTopic
 
-  before(() => {
-    mockTopicData = {
-      title: 'Test title'
-    }
-
-    mockReplyData = {
-      author: "This is reply author",
-      avatarUrl: "test/reply/url",
-      content: "This is reply content"
-    }
-
-    mockCommentData = {
-      author: "This is comment author",
-      avatarUrl: "test/comment/url",
-      content: "This is comment content"
-    }
-
-    mockUserData = {
-      openid: '123456',
-      avatarUrl: 'test/avatar/url',
-      nickName: 'zs'
-    }
-  })
-
-  beforeEach(done => {
-    mockTopic = new Topic(mockTopicData)
-    mockReply = new Reply(mockReplyData)
-    mockComment = new Comment(mockCommentData)
-    mockUser = new User(mockUserData)
-    Topic.remove({}, (err) => {
-      Reply.remove({}, (err) => {
-        User.remove({}, (err) => {
-          done()
-        })
+  before(done => {
+    support.createUser((err, user) => {
+      mockUser = user
+      support.createTopic(user, (err, topic) => {
+        mockTopic = topic
+        done()
       })
     })
   })
@@ -80,7 +45,11 @@ describe('API of topics', () => {
     it('should post a topic', done => {
       request(app)
         .post('/topics')
-        .send(mockTopicData)
+        .set('Authorization', support.accessToken)
+        .send({
+          title: 'Test title',
+          content: 'Test content'
+        })
         .end((err, res) => {
           should.not.exist(err)
           res.body.success.should.true()
@@ -106,74 +75,6 @@ describe('API of topics', () => {
               done()
             })
         })
-      })
-    })
-  })
-
-  describe('POST /topics/:topicId/replys', () => {
-
-    it('should post an reply', done => {
-      mockTopic.save((err) => {
-        request(app)
-          .post('/topics/'+ mockTopic._id + '/replys')
-          .send(mockReplyData)
-          .end((err, res) => {
-            should.not.exist(err)
-            res.body.success.should.true()
-            res.body.data.replys.length.should.above(0)
-            res.body.data.replys[0].should.be.Object()
-            done()
-          })
-      })
-    })
-  })
-
-  describe('GET /replys', () => {
-
-    it('should get all replys', done => {
-      mockReply.save((err) => {
-        request(app)
-          .get('/replys')
-          .end((err, res) => {
-            should.not.exist(err)
-            res.body.success.should.true()
-            res.body.data.should.be.Array()
-            res.body.data.length.should.above(0)
-            done()
-          })
-      })
-    })
-  })
-
-  describe('POST /replys/:replyId/comments', () => {
-
-    it('should create a comment', done => {
-      mockReply.save((err) => {
-        request(app)
-          .post('/replys/' + mockReply._id + '/comments')
-          .send(mockCommentData)
-          .end((err, res) => {
-            should.not.exist(err)
-            res.body.data.should.be.Object()
-            done()
-          })
-      })
-    })
-  })
-
-  describe('GET /replys/:replyId', () => {
-
-    it('should get a reply by id', done => {
-      mockReply.comments.push(mockComment)
-      mockReply.save((err) => {
-        request(app)
-          .get('/replys/' + mockReply._id)
-          .end((err, res) => {
-            should.not.exist(err)
-            res.body.success.should.true()
-            res.body.data.comments[0].should.be.Object()
-            done()
-          })
       })
     })
   })
