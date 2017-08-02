@@ -27,9 +27,7 @@ router.post('/topics/:topicId/replys', [requireAuth, getUser], (req, res) => {
         if (err) {
           return console.log(err)
         }
-        topic.populate('replys', (err, populatedTopic) => {
-          res.json({ data: populatedTopic, success: true })
-        })
+        res.json({ data: reply, success: true })
       })
     })
   })
@@ -46,11 +44,14 @@ router.get('/replys', (req, res) => {
 })
 
 router.get('/replys/:replyId', (req, res) => {
-  Reply.findById(req.params.replyId).exec((err, reply) => {
+  Reply.findById(req.params.replyId).populate('author').exec((err, reply) => {
     if (err) {
       return console.log(err)
     }
-    res.json({ data: reply, success: true })
+    Comment.populate(reply.comments, { path: 'author' }, (err, comments) => {
+      reply.comments = comments
+      res.json({ data: reply, success: true })
+    })
   })
 })
 
@@ -58,18 +59,29 @@ router.post('/replys/:replyId/comments', [requireAuth, getUser], (req, res) => {
   const user = req.user
   const comment = new Comment(req.body)
   comment.author = user
-  Reply.findById(req.params.replyId).exec((err, reply) => {
-    if (err) {
-      console.log(err)
-    }
-    reply.comments.push(comment)
-    reply.save(err => {
-      if (err) {
-        return console.log(err)
-      }
-      res.json({ data: reply, success: true })
+  Reply.findById(req.params.replyId)
+    .populate({
+      path: 'comments',
+      populate: 'author'
     })
-  })
+    .exec((err, reply) => {
+      if (err) {
+        console.log(err)
+      }
+      reply.comments.push(comment)
+      reply.save(err => {
+        if (err) {
+          return console.log(err)
+        }
+        Comment.populate(
+          reply.comments,
+          { path: 'author' },
+          (err, comments) => {
+            res.json({ data: comments, success: true })
+          }
+        )
+      })
+    })
 })
 
 module.exports = router
