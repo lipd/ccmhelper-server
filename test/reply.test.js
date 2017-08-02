@@ -31,8 +31,7 @@ describe('API of replys', () => {
           .end((err, res) => {
             should.not.exist(err)
             res.body.success.should.true()
-            res.body.data.replys.length.should.above(0)
-            res.body.data.replys[0].should.be.Object()
+            res.body.data.content.should.be.String()
             done()
           })
       })
