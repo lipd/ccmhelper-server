@@ -5,8 +5,8 @@ const Topic = require('../models/topic')
 const Reply = require('../models/reply')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
-const requireAuth = require('../middleware/require-auth')
-const getUser = require('../middleware/get-user')
+const requireAuth = require('../middlewares/require-auth')
+const getUser = require('../middlewares/get-user')
 
 router.post('/topics/:topicId/replys', [requireAuth, getUser], (req, res) => {
   const user = req.user

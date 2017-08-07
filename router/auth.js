@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
-const getOpenid = require('../middleware/get-openid')
-const generateToken = require('../middleware/generate-token')
+const getOpenid = require('../middlewares/get-openid')
+const generateToken = require('../middlewares/generate-token')
 
 router.post('/login', [getOpenid, generateToken], (req, res) => {
   const openid = req.openid

@@ -2,8 +2,8 @@ const express = require('express')
 const router = express.Router()
 const moment = require('moment')
 const Topic = require('../models/topic')
-const requireAuth = require('../middleware/require-auth')
-const getUser = require('../middleware/get-user')
+const requireAuth = require('../middlewares/require-auth')
+const getUser = require('../middlewares/get-user')
 
 router.get('/topics', (req, res) => {
   Topic.find()
