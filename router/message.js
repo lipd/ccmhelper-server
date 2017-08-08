@@ -11,11 +11,11 @@ router.get('/messages', (req, res) => {
   })
 })
 
-router.post('/messages', (req, res) => {
+router.post('/messages', (req, res, next) => {
   const message = new Message(req.body)
   message.save(err => {
     if (err) {
-      return console.log(err)
+      next(err)
     }
     Message.find().sort({ createdAt: -1 }).exec((err, messages) => {
       if (err) {

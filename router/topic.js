@@ -27,20 +27,20 @@ router.get('/topics', (req, res) => {
     })
 })
 
-router.post('/topics', [requireAuth, getUser], (req, res) => {
+router.post('/topics', [requireAuth, getUser], (req, res, next) => {
   const user = req.user
   const topic = new Topic(req.body)
   topic.author = user
   topic.save(err => {
     if (err) {
-      return console.log(err)
+      return next(err)
     }
     res.json({ data: topic, success: true })
   })
 })
 
 // get topic and the replys of it
-router.get('/topics/:id', (req, res) => {
+router.get('/topics/:id', (req, res, next) => {
   Topic.findById(req.params.id)
     .populate({
       path: 'replys',
@@ -48,7 +48,7 @@ router.get('/topics/:id', (req, res) => {
     })
     .exec((err, topic) => {
       if (err) {
-        return console.log(err)
+        return next(err)
       }
       res.json({ data: topic, success: true })
     })

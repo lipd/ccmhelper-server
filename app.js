@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const moment = require('moment')
+const errorHandler = require('./middlewares/error-handler')
 
 const topic = require('./router/topic')
 const reply = require('./router/reply')
@@ -35,6 +36,8 @@ app.use(message)
 app.use(topic)
 app.use(reply)
 app.use(auth)
+
+app.use(errorHandler)
 
 // TODO: validate the request only have
 // TODO: send a error message to clint

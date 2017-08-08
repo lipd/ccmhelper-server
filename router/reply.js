@@ -8,24 +8,24 @@ const Comment = mongoose.model('Comment', CommentSchema)
 const requireAuth = require('../middlewares/require-auth')
 const getUser = require('../middlewares/get-user')
 
-router.post('/topics/:topicId/replys', [requireAuth, getUser], (req, res) => {
+router.post('/topics/:topicId/replys', [requireAuth, getUser], (req, res, next) => {
   const user = req.user
   const topicId = req.params.topicId
   Topic.findById(topicId).exec((err, topic) => {
     if (err) {
-      return console.log(err)
+      next(err)
     }
     const reply = new Reply(req.body)
     reply.topic = topic
     reply.author = user
     reply.save(err => {
       if (err) {
-        return console.log(err)
+        next(err)
       }
       topic.replys.push(reply)
       topic.save(err => {
         if (err) {
-          return console.log(err)
+          next(err)
         }
         res.json({ data: reply, success: true })
       })
@@ -43,10 +43,10 @@ router.get('/replys', (req, res) => {
   })
 })
 
-router.get('/replys/:replyId', (req, res) => {
+router.get('/replys/:replyId', (req, res, next) => {
   Reply.findById(req.params.replyId).populate('author').exec((err, reply) => {
     if (err) {
-      return console.log(err)
+      next(err)
     }
     Comment.populate(reply.comments, { path: 'author' }, (err, comments) => {
       reply.comments = comments
@@ -55,7 +55,7 @@ router.get('/replys/:replyId', (req, res) => {
   })
 })
 
-router.post('/replys/:replyId/comments', [requireAuth, getUser], (req, res) => {
+router.post('/replys/:replyId/comments', [requireAuth, getUser], (req, res, next) => {
   const user = req.user
   const comment = new Comment(req.body)
   comment.author = user
@@ -66,12 +66,12 @@ router.post('/replys/:replyId/comments', [requireAuth, getUser], (req, res) => {
     })
     .exec((err, reply) => {
       if (err) {
-        console.log(err)
+        next(err)
       }
       reply.comments.push(comment)
       reply.save(err => {
         if (err) {
-          return console.log(err)
+          next(err)
         }
         Comment.populate(
           reply.comments,
