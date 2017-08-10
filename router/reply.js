@@ -16,7 +16,6 @@ router.post('/topics/:topicId/replys', [requireAuth, getUser], (req, res, next) 
       next(err)
     }
     const reply = new Reply(req.body)
-    reply.topic = topic
     reply.author = user
     reply.save(err => {
       if (err) {

@@ -50,7 +50,6 @@ exports.createReply = function(user, topic, cb) {
   const reply = new Reply(mockReplyData)
   reply.author = user
   topic.replys.push(reply)
-  reply.topic = topic
   topic.save(() => {
     reply.save(err => {
       cb(err, reply)
