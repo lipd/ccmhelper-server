@@ -37,8 +37,8 @@ exports.accessToken = generateToken({ openid: mockUserData.openid })
 
 exports.createUser = function(cb) {
   const user = new User(mockUserData)
-  user.isAdmin = true
-  user.canSendMessage = true
+  user.authorities.isAdmin = true
+  user.authorities.canSendMessage = true
   user.save(err => cb(err, user))
 }
 

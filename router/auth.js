@@ -10,7 +10,8 @@ router.post('/login', [getOpenid, generateToken], (req, res) => {
   const token = req.token
   User.findOne({ openid }, (err, user) => {
     if (user) {
-      return res.json({ token })
+      const authorities = user.authorities
+      return res.json({ token, authorities })
     } else {
       const userData = {
         openid: openid,
@@ -20,7 +21,8 @@ router.post('/login', [getOpenid, generateToken], (req, res) => {
       const user = new User(userData)
       user.openid = openid
       user.save()
-      return res.json({ token })
+      const authorities = user.authorities
+      return res.json({ token, authorities })
     }
   })
 })

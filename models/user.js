@@ -8,9 +8,10 @@ const UserSchema = new Schema(
     nickName: { type: String, required: true },
     department: { type: String },
 
-    // user authority
-    isAdmin: { type: Boolean, default: false },
-    canSendMessage: { type: Boolean, default: false},
+    authorities: {
+      isAdmin: { type: Boolean, default: false },
+      canSendMessage: { type: Boolean, default: false},
+    },
 
     replys: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
     attentionTopics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }]

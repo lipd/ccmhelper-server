@@ -15,7 +15,7 @@ router.get('/messages', (req, res) => {
 
 router.post('/messages', [requireAuth, getUser], (req, res, next) => {
   const user = req.user
-  if (!user.canSendMessage) {
+  if (!user.authorities.canSendMessage) {
     return res.status(401).json({ error: 'Authentication Filure' })
   }
   const message = new Message(req.body)
