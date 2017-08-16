@@ -32,4 +32,14 @@ router.post('/messages', [requireAuth, getUser], (req, res, next) => {
   })
 })
 
+router.get('/messages/:id', (req, res, next) => {
+  const id = req.params.id
+  Message.findById(id).exec((err, message) => {
+    if (err) {
+      next(err)
+    }
+    res.json({ message })
+  })
+})
+
 module.exports = router
