@@ -34,12 +34,14 @@ router.post('/messages', [requireAuth, getUser], (req, res, next) => {
 
 router.get('/messages/:id', (req, res, next) => {
   const id = req.params.id
-  Message.findById(id).populate('replys').exec((err, message) => {
-    if (err) {
-      next(err)
-    }
-    res.json({ message })
-  })
+  Message.findById(id)
+    .populate({ path: 'replys', populate: { path: 'author' } })
+    .exec((err, message) => {
+      if (err) {
+        next(err)
+      }
+      res.json({ message })
+    })
 })
 
 module.exports = router
