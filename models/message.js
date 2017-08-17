@@ -1,13 +1,13 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const CommentSchema = require('./comment-schema')
 
 const MessageSchema = new Schema(
   {
     title: { type: String, required: true },
     department: { type: String, required: true },
     content: { type: String, required: true },
-    comments: [CommentSchema]
+    votes: { type: Schema.Types.ObjectId, ref: 'User'},
+    replys: { type: Schema.Types.ObjectId, ref: 'Reply'}
   },
   { timestamps: true }
 )
