@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const config = require('../config')
 const mongoose = require('mongoose')
+const Message = require('../models/message')
 const Topic = require('../models/topic')
 const Reply = require('../models/reply')
 const CommentSchema = require('../models/comment-schema')
@@ -33,6 +34,13 @@ const mockUserData = {
   nickName: 'zs'
 }
 
+const mockMessageData = {
+  title: 'Test title',
+  department: 'Test deparment',
+  content: 'Test content'
+}
+exports.mockMessageData = mockMessageData
+
 exports.accessToken = generateToken({ openid: mockUserData.openid })
 
 exports.createUser = function(cb) {
@@ -42,17 +50,33 @@ exports.createUser = function(cb) {
   user.save(err => cb(err, user))
 }
 
+exports.createMessage = function(cb) {
+  const message = new Message(mockMessageData)
+  message.save(err => cb(err, message))
+}
+
 exports.createTopic = function(user, cb) {
   const topic = new Topic(mockTopicData)
   topic.author = user
   topic.save(err => cb(err, topic))
 }
 
-exports.createReply = function(user, topic, cb) {
+exports.createReplyOfTopic = function(user, topic, cb) {
   const reply = new Reply(mockReplyData)
   reply.author = user
   topic.replys.push(reply)
   topic.save(() => {
+    reply.save(err => {
+      cb(err, reply)
+    })
+  })
+}
+
+exports.createReplyOfMessage = function(user, message, cb) {
+  const reply = new Reply(mockReplyData)
+  reply.author = user
+  message.replys.push(reply)
+  message.save(() => {
     reply.save(err => {
       cb(err, reply)
     })
