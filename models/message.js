@@ -6,8 +6,8 @@ const MessageSchema = new Schema(
     title: { type: String, required: true },
     department: { type: String, required: true },
     content: { type: String, required: true },
-    votes: { type: Schema.Types.ObjectId, ref: 'User'},
-    replys: { type: Schema.Types.ObjectId, ref: 'Reply'}
+    votes: [{ type: Schema.Types.ObjectId, ref: 'User'}],
+    replys: [{ type: Schema.Types.ObjectId, ref: 'Reply'}]
   },
   { timestamps: true }
 )

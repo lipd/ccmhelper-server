@@ -34,7 +34,7 @@ router.post('/messages', [requireAuth, getUser], (req, res, next) => {
 
 router.get('/messages/:id', (req, res, next) => {
   const id = req.params.id
-  Message.findById(id).exec((err, message) => {
+  Message.findById(id).populate('replys').exec((err, message) => {
     if (err) {
       next(err)
     }
