@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const Topic = require('../models/topic')
+const Message = require('../models/message')
 const Reply = require('../models/reply')
 const CommentSchema = require('../models/comment-schema')
 const Comment = mongoose.model('Comment', CommentSchema)
@@ -27,6 +28,30 @@ router.post('/topics/:topicId/replys', [requireAuth, getUser], (req, res, next) 
           next(err)
         }
         res.json({ data: reply, success: true })
+      })
+    })
+  })
+})
+
+router.post('/messages/:messageId/replys', [requireAuth, getUser], (req, res, next) => {
+  const user = req.user
+  const messageId = req.params.messageId
+  Message.findById(messageId).exec((err, message) => {
+    if (err) {
+      next(err)
+    }
+    const reply = new Reply(req.body)
+    reply.author = user
+    reply.save(err => {
+      if (err) {
+        next(err)
+      }
+      message.replys.push(reply)
+      message.save(err => {
+        if (err) {
+          next(err)
+        }
+        res.json({reply})
       })
     })
   })
