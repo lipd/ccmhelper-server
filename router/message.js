@@ -36,6 +36,10 @@ router.get('/messages/:id', (req, res, next) => {
   const id = req.params.id
   Message.findById(id)
     .populate({ path: 'replys', populate: { path: 'author' } })
+    .populate({
+      path: 'replys',
+      populate: { path: 'comments.author' }
+    })
     .exec((err, message) => {
       if (err) {
         next(err)
