@@ -48,4 +48,38 @@ router.get('/messages/:id', (req, res, next) => {
     })
 })
 
+// TODO: Do Test
+router.put('/messages/:id/upvote',[requireAuth, getUser], (req, res, next) => {
+  const id = req.params.id
+  const user = req.user
+  Message.findById(id).exec((err, message) => {
+    if (err) {
+      next(err)
+    }
+    message.votes.addToSet(user)
+    message.save(err => {
+      if (err) {
+        next(err)
+      }
+      res.json({ voted: true })
+    })
+  })
+})
+
+router.put('/messages/:id/downvote', [requireAuth, getUser], (req, res, next) => {
+  const id = req.params.id
+  const user = req.user
+  Message.findById(id).exec((err, message) => {
+    if (err) {
+      next(err)
+    }
+    message.votes.pull(user)
+    message.save(err => {
+      if (err) {
+        next(err)
+      }
+      res.json({ downVoted: true })
+    })
+  })
+})
 module.exports = router
