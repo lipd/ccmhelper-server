@@ -108,4 +108,39 @@ router.post('/replys/:replyId/comments', [requireAuth, getUser], (req, res, next
     })
 })
 
+// TODO: Do Test
+router.put('/replys/:id/upvote',[requireAuth, getUser], (req, res, next) => {
+  const id = req.params.id
+  const user = req.user
+  Reply.findById(id).exec((err, reply) => {
+    if (err) {
+      next(err)
+    }
+    reply.votes.addToSet(user)
+    reply.save(err => {
+      if (err) {
+        next(err)
+      }
+      res.json({ voted: true })
+    })
+  })
+})
+
+router.put('/replys/:id/downvote', [requireAuth, getUser], (req, res, next) => {
+  const id = req.params.id
+  const user = req.user
+  Reply.findById(id).exec((err, reply) => {
+    if (err) {
+      next(err)
+    }
+    reply.votes.pull(user)
+    reply.save(err => {
+      if (err) {
+        next(err)
+      }
+      res.json({ downVoted: true })
+    })
+  })
+})
+
 module.exports = router
