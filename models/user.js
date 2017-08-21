@@ -11,10 +11,7 @@ const UserSchema = new Schema(
     authorities: {
       isAdmin: { type: Boolean, default: false },
       canSendMessage: { type: Boolean, default: false},
-    },
-
-    replys: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
-    attentionTopics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }]
+    }
   },
   { timestamps: true }
 )

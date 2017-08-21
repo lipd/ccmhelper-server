@@ -6,7 +6,7 @@ const ReplySchema = new Schema(
   {
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     content: { type: String, require: true },
-    vote: { type: Number, default: 0 },
+    votes: [{ type: Schema.Types.ObjectId, ref: 'User'}],
     comments: [CommentSchema]
   },
   { timestamps: true }
